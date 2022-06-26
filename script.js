@@ -1,12 +1,9 @@
+import { data } from "../data.js";
+
 // Создание времени
+const sliderTimesWrapper = document.querySelector(".sliderTimesWrapper");
 for (let i = 0; i < 24; i++) {
-   const sliderTimesWrapper = document.querySelector(".sliderTimesWrapper");
-   if (i<10) {
-    sliderTimesWrapper.insertAdjacentHTML('beforeend',`<p>0${i}:00</p>`);
-   }
-   else{
-    sliderTimesWrapper.insertAdjacentHTML('beforeend',`<p>${i}:00</p>`);
-   }
+    sliderTimesWrapper.insertAdjacentHTML('beforeend', `<p class="hour">${String(i).padStart(2, "0")}:00</p>`);
 }
 
 // Слайдер
@@ -16,24 +13,41 @@ const wrapper = document.querySelector(".sliderTimesWrapper")
 const HEIGHT_ITEM = 53
 
 let correctTime = 2
-
 // рендеринг слайдера
 function moveWrapper(pos) {
-    wrapper.style.top = pos * -HEIGHT_ITEM + HEIGHT_ITEM*2 + "px"
+    wrapper.style.top = pos * -HEIGHT_ITEM + HEIGHT_ITEM * 2 + "px"
 }
 
 // движение вниз
-next.addEventListener("click", ()=>{
+next.addEventListener("click", () => {
     if (correctTime > -1 && correctTime <= 22) {
         correctTime++
     }
     moveWrapper(correctTime)
+    dataTime(correctTime)
 })
 
 // движение вверх
-prev.addEventListener("click", ()=>{
+prev.addEventListener("click", () => {
     if (correctTime >= 1 && correctTime <= 23) {
         correctTime--
     }
     moveWrapper(correctTime)
+    dataTime(correctTime)
 })
+
+// вывод данных
+const tempP = document.querySelector(".tempP")
+const windP = document.querySelector(".windP")
+const precipP = document.querySelector(".precipP")
+function dataTime(correctTime) {
+    tempP.innerHTML = data[correctTime].temp + `°`
+    windP.innerHTML = data[correctTime].wind + `mhp`
+    precipP.innerHTML = data[correctTime].temp + `%`
+}
+dataTime(correctTime)
+
+// Получение даты
+let date = new Date();
+let output = String(date.getDate()).padStart(2, '0') + '.' + String(date.getMonth() + 1).padStart(2, '0') + '.' + date.getFullYear();
+document.querySelector(".dat").innerHTML = output
